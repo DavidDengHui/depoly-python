@@ -1,5 +1,14 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index" }
-  ]
+    { 
+			"source": "/(.*)", 
+			"destination": "/api/index" 
+		}
+  ],
+	"redirects": [
+		{ 
+			"source": "/", 
+			"destination": "/doit" 
+		}
+	]
 }
