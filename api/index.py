@@ -1,15 +1,14 @@
+# 导入flask模块
 from flask import Flask, request, jsonify
-
+# 创建flask应用对象
 app = Flask(__name__)
 
-@app.route('/doit', methods=["GET", "POST"])
-def doit():
+# 定义一个路由函数，处理根路径的请求
+@app.route("/")
+def index():
     # 设置页面Content-Type为application/json; charset=utf-8
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-    response.headers["Content-Type"] = "application/json; charset=utf-8"
     response = jsonify()
+    response.headers["Content-Type"] = "application/json; charset=utf-8"
     # 获取链接中的token值
     token = request.args.get("token")
     # 将值输出到页面json数据
