@@ -1,11 +1,26 @@
-from http.server import BaseHTTPRequestHandler
+from flask import Flask, jsonify
+
+app = Flask(__name__)
 
 
-class handler(BaseHTTPRequestHandler):
+@app.route('/index')
+def home():
+    return 'This is Home'
 
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write('Hello, world!'.encode('utf-8'))
-        return
+
+@app.route('/about')
+def about():
+    return 'About'
+
+
+@app.route('/doit')
+def home():
+    # 创建一个json对象
+    json_data = {
+        "status": "error",
+        "code": "1001",
+        "doit": "INVALID_KEY",
+        "callback": "token"
+    }
+    # 返回json响应
+    return jsonify(json_data)
