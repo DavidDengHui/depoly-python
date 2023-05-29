@@ -9,7 +9,7 @@ def doit():
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "*"
     response.headers["Content-Type"] = "application/json; charset=utf-8"
-    token = request.args.get("token")
+    token = "Z2hwX05VejBmZzBFSjFuVXBmSUtLU1lDZjJpN3RpdVlnZzB5VjdtRA=="
     # 创建一个json对象
     json_data = {"status": "error","code": "1001","doit": "INVALID_KEY","callback": token}
     # 创建一个响应对象
