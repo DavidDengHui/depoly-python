@@ -1,13 +1,18 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
 
+@app.route('/')
+def home():
+    return 'Home'
+
+
 @app.route('/about')
 def about():
-    return 'About Page'
+    return 'About'
 
 
 @app.route('/doit')
-def home():
-    return 'Hello, World!'
+def doit():
+    return 'This is API.'
