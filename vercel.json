@@ -4,11 +4,5 @@
 			"source": "/(.*)", 
 			"destination": "/api/index" 
 		}
-  ],
-	"redirects": [
-		{ 
-			"source": "/", 
-			"destination": "/doit" 
-		}
-	]
+  ]
 }

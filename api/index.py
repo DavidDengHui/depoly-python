@@ -5,6 +5,6 @@ app = Flask(__name__)
 
 
 @app.route("/doit")
-def doit():
+def index():
     token = base64.b64decode(request.args.get("token")).decode()
-    return token
+    return jsonify({"status": "error", "code": "1001", "doit": "INVALID_KEY", "callback": token})
