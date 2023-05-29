@@ -7,5 +7,4 @@ app = Flask(__name__)
 @app.route("/doit")
 def doit():
     token = base64.b64decode(request.args.get("token")).decode()
-
     return token
