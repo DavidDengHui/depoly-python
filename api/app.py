@@ -172,6 +172,23 @@ def doit():
                 status_data["code"] = "1003"
                 status_data["doit"] = token
                 status_data["callback"] = "INVALID_HOOK"
+        elif token == "send_api":
+            if hook_name:
+                status_data["doit"] = hook_name
+                data = requests.get(hook_name)
+                if data.ok:
+                    get_data = data.content
+                    data_json = json.loads(get_data)
+                    status_data["status"] = "success"
+                    status_data["code"] = "1103"
+                    status_data["callback"] = data_json
+                else:
+                    status_data["code"] = "1006"
+                    status_data["callback"] = f"INVALID_HOOK_{data.status_code}"
+            else:
+                status_data["code"] = "1005"
+                status_data["doit"] = token
+                status_data["callback"] = "NO_HOOK"
         else:
             try:
                 token = base64.b64decode(token).decode()
@@ -179,6 +196,7 @@ def doit():
                 status_data["code"] = "1102"
                 status_data["doit"] = token
                 status_data["callback"] = token
+
             except binascii.Error:
                 status_data["code"] = "1002"
                 status_data["doit"] = token
