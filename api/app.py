@@ -1,11 +1,12 @@
 from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
 import base64
 import binascii
 import json
 import requests
 
 app = Flask(__name__)
-
+CORS(app)
 
 status_data = {
     "status": "error",
