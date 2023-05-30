@@ -217,7 +217,7 @@ def doit():
                         response = requests.post(
                             url, data=json.dumps({"body": body}), headers=headers
                         )
-                        status_data["callback"] = response.text
+                        status_data["callback"] = json.loads(response.content)
                     else:
                         status_data["code"] = "1008"
                         status_data["doit"] = token + " | " + hook_name
