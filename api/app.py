@@ -26,76 +26,105 @@ def doit():
                     api = "api.bilibili.com"
                     path = "/x/web-interface/"
                     type = "popular"
+                    web = "all"
                     if request.args.get("type"):
                         if request.args.get("type") == "rank":
+                            web = "rank/all"
                             type = "ranking/v2?rid=0&type=all"
                         elif request.args.get("type") == "rank01":
+                            web = "rank/bangumi"
                             path = "/pgc/web/rank/"
                             type = "list?day=3&season_type=1"
                         elif request.args.get("type") == "rank02":
+                            web = "rank/guochan"
                             path = "/pgc/season/rank/web/"
                             type = "list?day=3&season_type=4"
                         elif request.args.get("type") == "rank03":
+                            web = "rank/guochuang"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=168&type=all"
                         elif request.args.get("type") == "rank04":
+                            web = "rank/documentary"
                             path = "/pgc/season/rank/web/"
                             type = "list?day=3&season_type=3"
                         elif request.args.get("type") == "rank05":
+                            web = "rank/douga"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=1&type=all"
                         elif request.args.get("type") == "rank06":
+                            web = "rank/music"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=3&type=all"
                         elif request.args.get("type") == "rank07":
+                            web = "rank/dance"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=129&type=all"
                         elif request.args.get("type") == "rank08":
+                            web = "rank/game"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=4&type=all"
                         elif request.args.get("type") == "rank09":
+                            web = "rank/knowledge"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=36&type=all"
                         elif request.args.get("type") == "rank10":
+                            web = "rank/tech"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=188&type=all"
                         elif request.args.get("type") == "rank11":
+                            web = "rank/sports"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=234&type=all"
                         elif request.args.get("type") == "rank12":
+                            web = "rank/car"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=223&type=all"
                         elif request.args.get("type") == "rank13":
+                            web = "rank/life"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=160&type=all"
                         elif request.args.get("type") == "rank14":
+                            web = "rank/food"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=211&type=all"
                         elif request.args.get("type") == "rank15":
+                            web = "rank/animal"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=217&type=all"
                         elif request.args.get("type") == "rank16":
+                            web = "rank/kichiku"
+                            path = "/x/web-interface/ranking/"
+                            type = "v2?rid=119&type=all"
+                        elif request.args.get("type") == "rank17":
+                            web = "rank/fashion"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=155&type=all"
-                        elif request.args.get("type") == "rank17":
+                        elif request.args.get("type") == "rank18":
+                            web = "rank/ent"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=5&type=all"
-                        elif request.args.get("type") == "rank18":
+                        elif request.args.get("type") == "rank19":
+                            web = "rank/cinephile"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=181&type=all"
-                        elif request.args.get("type") == "rank19":
+                        elif request.args.get("type") == "rank20":
+                            web = "rank/movie"
                             path = "/pgc/season/rank/web/"
                             type = "list?day=3&season_type=2"
-                        elif request.args.get("type") == "rank20":
+                        elif request.args.get("type") == "rank21":
+                            web = "rank/tv"
                             path = "/pgc/season/rank/web/"
                             type = "list?day=3&season_type=5"
-                        elif request.args.get("type") == "rank21":
+                        elif request.args.get("type") == "rank22":
+                            web = "rank/variety"
                             path = "/pgc/season/rank/web/"
                             type = "list?day=3&season_type=7"
-                        elif request.args.get("type") == "rank22":
+                        elif request.args.get("type") == "rank23":
+                            web = "rank/origin"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=0&type=origin"
-                        elif request.args.get("type") == "rank23":
+                        elif request.args.get("type") == "rank24":
+                            web = "rank/rookie"
                             path = "/x/web-interface/ranking/"
                             type = "v2?rid=0&type=rookie"
                     else:
@@ -117,7 +146,7 @@ def doit():
                         "cookie": "",
                         "origin": "https://www.bilibili.com",
                         "pragma": "no-cache",
-                        # "referer": "https://www.bilibili.com/v/popular/rank/all",
+                        "referer": "https://www.bilibili.com/v/popular/" + web,
                         "sec-ch-ua": '"Microsoft Edge";v="113", "Chromium";v="113", "Not-A.Brand";v="24"',
                         "sec-ch-ua-mobile": "?0",
                         "sec-ch-ua-platform": '"Windows"',
