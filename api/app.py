@@ -192,10 +192,40 @@ def doit():
         else:
             try:
                 token = base64.b64decode(token).decode()
-                status_data["status"] = "success"
-                status_data["code"] = "1102"
-                status_data["doit"] = token
-                status_data["callback"] = token
+                if hook_name:
+                    if hook_name == "deployment_status":
+                        status_data["status"] = "success"
+                        status_data["code"] = "1102"
+                        status_data["doit"] = token + " | " + hook_name
+                        username = request.args.get("username")
+                        repopath = request.args.get("repopath")
+                        reponame = request.args.get("reponame")
+                        state = request.args.get("state")
+                        page_url = request.args.get("url")
+                        url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/master"
+                        headers = {
+                            "Authorization": f"token {token}",
+                            "User-Agent": username,
+                        }
+                        response = requests.get(url, headers=headers)
+                        data = response.json()
+                        sha = data["sha"]
+                        commit_msg = data["commit"]["message"]
+                        url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/{sha}/comments"
+                        headers["Content-Type"] = "application/json"
+                        body = f"# Successfully deployed with \n > {commit_msg}\n## Following the Pages URL:\n### [{page_url}]({page_url})"
+                        response = requests.post(
+                            url, data=json.dumps({"body": body}), headers=headers
+                        )
+                        status_data["callback"] = response.text
+                    else:
+                        status_data["code"] = "1008"
+                        status_data["doit"] = token + " | " + hook_name
+                        status_data["callback"] = "INVALID_HOOK"
+                else:
+                    status_data["code"] = "1007"
+                    status_data["doit"] = token
+                    status_data["callback"] = "NO_HOOK"
 
             except binascii.Error:
                 status_data["code"] = "1002"
