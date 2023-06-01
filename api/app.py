@@ -268,6 +268,7 @@ def doit():
                             "state": response.status_code,
                         }
                     else:
+                        status_data["status"] = "error"
                         status_data["code"] = "1008"
                         status_data["doit"] = token + " | " + hook_name
                         status_data["callback"] = "INVALID_HOOK"
