@@ -20,6 +20,8 @@ status_data = {
 def doit():
     token = request.args.get("token")
     hook_name = request.args.get("hook_name")
+    if request.headers.get("HTTP_X_GITHUB_EVENT"):
+        hook_name = request.headers.get("HTTP_X_GITHUB_EVENT")
     if token:
         if token == "get_info":
             if hook_name:
@@ -194,30 +196,42 @@ def doit():
                 token = base64.b64decode(token).decode()
                 if hook_name:
                     if hook_name == "deployment_status":
-                        status_data["status"] = "success"
-                        status_data["code"] = "1102"
+                        status_data["code"] = "1009"
                         status_data["doit"] = token + " | " + hook_name
                         username = request.args.get("username")
                         repopath = request.args.get("repopath")
                         reponame = request.args.get("reponame")
                         state = request.args.get("state")
-                        page_url = request.args.get("url")
-                        url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/master"
-                        headers = {
-                            "Authorization": f"token {token}",
-                            "User-Agent": username,
-                        }
-                        response = requests.get(url, headers=headers)
-                        data = response.json()
-                        sha = data["sha"]
-                        commit_msg = data["commit"]["message"]
-                        url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/{sha}/comments"
-                        headers["Content-Type"] = "application/json"
-                        body = f"# Successfully deployed with \n > {commit_msg}\n## Following the Pages URL:\n### [{page_url}]({page_url})"
-                        response = requests.post(
-                            url, data=json.dumps({"body": body}), headers=headers
-                        )
-                        status_data["callback"] = json.loads(response.content)
+                        status_data["callback"] = request.args
+                        return jsonify(status_data)
+                        # if request.json:
+                        #     get_data = request.json
+                        #     if get_data["deployment_status"]:
+                        #         deployment_status = get_data["deployment_status"]
+                        #         if deployment_status["state"]:
+                        #             state = deployment_status["state"]
+                        if state == "success":
+                            status_data["status"] = "success"
+                            page_url = request.args.get("url")
+                            url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/master"
+                            headers = {
+                                "Authorization": f"token {token}",
+                                "User-Agent": username,
+                            }
+                            response = requests.get(url, headers=headers)
+                            data = response.json()
+                            sha = data["sha"]
+                            commit_msg = data["commit"]["message"]
+                            url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/{sha}/comments"
+                            headers["Content-Type"] = "application/json"
+                            body = f"# Successfully deployed with \n > {commit_msg}\n## Following the Pages URL:\n### [{page_url}]({page_url})"
+                            response = requests.post(
+                                url, data=json.dumps({"body": body}), headers=headers
+                            )
+                            status_data["callback"] = json.loads(
+                                response.content)
+                        else:
+                            status_data["callback"] = f"[state]{state}"
                     elif hook_name == "push_hooks":
                         status_data["status"] = "success"
                         status_data["code"] = "1104"
