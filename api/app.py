@@ -15,21 +15,22 @@ status_data = {
     "callback": "INVALID_KEY"
 }
 
-#定义一个自定义的函数，接受一个对象作为参数
+
 def to_list(cont):
-  #创建一个空的字典，用于存储键值对
-  result = {}
-  #遍历对象的每个键值对
-  for key, value in cont.items():
-    #将键值对添加到字典中
-    result[key] = value
-  #返回字典
-  return result
+    result = {}
+    for key, value in cont.items():
+        result[key] = value
+    return result
+
 
 @app.route("/doit", methods=["GET", "POST"])
 def doit():
     token = request.args.get("token")
+    if request.method == "POST":
+        token = page_url = to_list(request.json)["password"]
     hook_name = request.args.get("hook_name")
+    if request.method == "POST":
+        hook_name = page_url = to_list(request.json)["hook_name"]
     if request.headers.get("HTTP_X_GITHUB_EVENT"):
         hook_name = request.headers.get("HTTP_X_GITHUB_EVENT")
     if token:
@@ -147,7 +148,6 @@ def doit():
                                 type = type + "&pn=" + request.args.get("pn")
                             else:
                                 type = type + "&pn=1"
-
                     header = {
                         "authority": api,
                         "method": "GET",
@@ -184,7 +184,7 @@ def doit():
                 status_data["code"] = "1003"
                 status_data["doit"] = token
                 status_data["callback"] = "INVALID_HOOK"
-        elif token == "send_api":
+        elif token == "get_api":
             if hook_name:
                 status_data["doit"] = hook_name
                 data = requests.get(hook_name)
@@ -213,13 +213,15 @@ def doit():
                         reponame = request.args.get("reponame")
                         state = request.args.get("state")
                         if request.method == "POST":
-                            state = to_list(request.json)["deployment_status"]["state"]
+                            state = to_list(request.json)[
+                                "deployment_status"]["state"]
                         if state == "success":
                             status_data["status"] = "success"
                             status_data["code"] = "1103"
                             page_url = request.args.get("url")
                             if request.method == "POST":
-                                page_url = to_list(request.json)["deployment_status"]["environment_url"]
+                                page_url = to_list(request.json)[
+                                    "deployment_status"]["environment_url"]
                             url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/master"
                             headers = {
                                 "Authorization": f"token {token}",
