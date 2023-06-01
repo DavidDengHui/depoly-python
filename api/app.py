@@ -212,19 +212,14 @@ def doit():
                         repopath = request.args.get("repopath")
                         reponame = request.args.get("reponame")
                         state = request.args.get("state")
+                        if request.method == "POST":
+                            state = to_list(request.json)["deployment_status"]["state"]
                         status_data["callback"] = {
                             "method": request.method,
                             "url": request.url, #获取请求的完整URL
                             "args": request.args, #获取请求的查询字符串参数，是一个字典对象
                             "state": state,
                         }
-                        if request.method == "POST":
-                            get_data = to_list(request.json)
-                            status_data["callback"] = get_data["deployment_status"]["state"]
-                            if get_data["deployment_status"]:
-                                deployment_status = get_data["deployment_status"]
-                                if deployment_status["state"]:
-                                    state = deployment_status["state"]
                         return jsonify(status_data)
                         if state == "success":
                             status_data["status"] = "success"
