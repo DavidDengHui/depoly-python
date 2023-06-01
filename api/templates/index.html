@@ -97,12 +97,68 @@
       document.getElementById("output").value = "";
     }
   </script>
+  <script>
+    //定义一个函数，用于将链接中的&符号进行url转义
+    function escapeUrl(url) {
+      //使用replace方法将&符号替换为%26
+      return url.replace(/&/g, "%26");
+    }
+
+    //定义一个函数，用于生成新的链接并显示在页面上
+    function generateLink() {
+      //获取输入框中的链接
+      var inputURL = document.getElementById("inputURL").value;
+      //调用escapeUrl函数将链接进行url转义
+      var escaped = escapeUrl(inputURL);
+      //拼接新的链接
+      var newLink = "https://api.hnest.eu.org/api?url=" + escaped;
+      //获取显示框元素
+      var outputURL = document.getElementById("outputURL");
+      //设置显示框的内容为新的链接，并添加一个a标签，使其可以点击打开新窗口
+      outputURL.innerHTML = "<a href='/api?url=" + escaped + "' target='_blank'>" + newLink + "</a>";
+      //获取复制按钮元素
+      var copyButton = document.getElementById("copy");
+      //设置复制按钮的属性为可见
+      copyButton.style.visibility = "visible";
+    }
+
+    //定义一个函数，用于复制生成的链接
+    function copyLink() {
+      //获取显示框元素
+      var output = document.getElementById("outputURL");
+      //获取显示框中的a标签元素
+      var link = output.getElementsByTagName("a")[0];
+      //获取a标签中的href属性值，即生成的链接
+      var text = link.href;
+      //创建一个临时的input元素，用于存储要复制的文本
+      var tempInput = document.createElement("inputURL");
+      //将input元素添加到body中
+      document.body.appendChild(tempInput);
+      //设置input元素的值为要复制的文本
+      tempInput.value = text;
+      //选中input元素中的文本
+      tempInput.select();
+      //执行复制命令
+      document.execCommand("copy");
+      //从body中移除input元素
+      document.body.removeChild(tempInput);
+    }
+  </script>
 </head>
 <body>
   <h1>Hello, Python!</h1>
   <h2>This is a API: 
     <a href='/doit?token=Z2hwX05VejBmZzBFSjFuVXBmSUtLU1lDZjJpN3RpdVlnZzB5VjdtRA==' title='Myself API'>https://api.hnest.eu.org/doit</a>
   </h2>
+  <br>
+  <h1>盗链生成器</h1>
+  <p>请输入一个链接：</p>
+  <input type="text" id="inputURL" placeholder="https://example.com/?a=1&b=2">
+  <button onclick="generateLink()">盗链</button>
+  <!-- 添加一个复制按钮，并设置初始属性为不可见 -->
+  <button id="copy" onclick="copyLink()" style="visibility: hidden;">复制</button>
+  <p>生成的链接：</p>
+  <div id="outputURL"></div>
   <br>
   <h1>Base64编码和解码</h1>
   <p>请输入要编码或解码的内容：</p>

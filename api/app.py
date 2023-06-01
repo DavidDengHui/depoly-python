@@ -279,7 +279,27 @@ def doit():
             except binascii.Error:
                 status_data["code"] = "1002"
                 status_data["doit"] = token
+    return jsonify(status_data)
 
+
+@app.route("/api", methods=["GET", "POST"])
+def api():
+    if request.args.get("url"):
+        data = requests.get(request.args.get("url"))
+        if data.ok:
+            get_data = data.content
+            data_json = json.loads(get_data)
+            return jsonify(data_json)
+        else:
+            status_data["status"] = "error"
+            status_data["code"] = "1002"
+            status_data["doit"] = request.args.get("url")
+            status_data["callback"] = f"INVALID_URL_{data.status_code}"
+    else:
+        status_data["status"] = "error"
+        status_data["code"] = "1001"
+        status_data["doit"] = "NO_URL"
+        status_data["callback"] = "INVALID_HOOK"
     return jsonify(status_data)
 
 
