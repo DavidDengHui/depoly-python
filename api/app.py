@@ -212,36 +212,19 @@ def doit():
                         repopath = request.args.get("repopath")
                         reponame = request.args.get("reponame")
                         state = request.args.get("state")
-                        # status_data["callback"] = request.args
-                        # status_data["callback"] = {
-                        #     "method": request.method,
-                        #     "url": request.url, #获取请求的完整URL
-                        #     "args": request.args, #获取请求的查询字符串参数，是一个字典对象
-                        #     "headers": request.headers, #获取请求的头部信息，是一个字典对象
-                        # }
-                        if request.method == "GET":
-                            status_data["callback"] = {
-                                "method": request.method,
-                                "url": request.url, #获取请求的完整URL
-                                "args": request.args, #获取请求的查询字符串参数，是一个字典对象
-                                "headers": to_list(request.headers), #获取请求的头部信息，是一个字典对象
-                            }
                         if request.method == "POST":
-                            status_data["callback"] = {
-                                "method": request.method,
-                                "url": request.url, #获取请求的完整URL
-                                "data": request.data.decode("utf-8"), #获取请求的原始数据，是一个字节对象
-                                "form": to_list(request.form), #获取请求的表单数据，是一个字典对象
-                                "json": to_list(request.json), #获取请求的JSON数据，是一个字典对象
-                                "headers": to_list(request.headers), #获取请求的头部信息，是一个字典对象
-                            }
+                            get_data = to_list(request.json)
+                            if get_data["deployment_status"]:
+                                deployment_status = get_data["deployment_status"]
+                                if deployment_status["state"]:
+                                    state = deployment_status["state"]
+                        status_data["callback"] = {
+                            "method": request.method,
+                            "url": request.url, #获取请求的完整URL
+                            "args": request.args, #获取请求的查询字符串参数，是一个字典对象
+                            "state": state,
+                        }
                         return jsonify(status_data)
-                        # if request.json:
-                        #     get_data = request.json
-                        #     if get_data["deployment_status"]:
-                        #         deployment_status = get_data["deployment_status"]
-                        #         if deployment_status["state"]:
-                        #             state = deployment_status["state"]
                         if state == "success":
                             status_data["status"] = "success"
                             page_url = request.args.get("url")
