@@ -220,7 +220,7 @@ def doit():
                         }
                         if request.method == "POST":
                             get_data = to_list(request.json)
-                            status_data["callback"] = get_data
+                            status_data["callback"] = get_data["deployment_status"]
                             if get_data["deployment_status"]:
                                 deployment_status = get_data["deployment_status"]
                                 if deployment_status["state"]:
