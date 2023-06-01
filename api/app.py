@@ -214,11 +214,12 @@ def doit():
                         state = request.args.get("state")
                         if request.method == "POST":
                             state = to_list(request.json)["deployment_status"]["state"]
-                        status_data["callback"] = state
-                        return jsonify(status_data)
                         if state == "success":
                             status_data["status"] = "success"
+                            status_data["code"] = "1103"
                             page_url = request.args.get("url")
+                            if request.method == "POST":
+                                page_url = to_list(request.json)["deployment_status"]["environment_url"]
                             url = f"https://api.github.com/repos/{repopath}/{reponame}/commits/master"
                             headers = {
                                 "Authorization": f"token {token}",
