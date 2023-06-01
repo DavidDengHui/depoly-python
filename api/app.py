@@ -211,9 +211,12 @@ def doit():
                         username = request.args.get("username")
                         repopath = request.args.get("repopath")
                         reponame = request.args.get("reponame")
-                        state = request.args.get("state")
                         if request.method == "POST":
                             state = to_list(request.json)["deployment_status"]["state"]
+                        if state:
+                            state = state
+                        else:
+                            state = request.args.get("state")
                         status_data["callback"] = {
                             "method": request.method,
                             "url": request.url, #获取请求的完整URL
