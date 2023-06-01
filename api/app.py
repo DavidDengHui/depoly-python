@@ -16,7 +16,7 @@ status_data = {
 }
 
 
-@app.route("/doit")
+@app.route("/doit", methods=["GET", "POST"])
 def doit():
     token = request.args.get("token")
     hook_name = request.args.get("hook_name")
