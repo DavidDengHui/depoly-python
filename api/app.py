@@ -218,6 +218,32 @@ def doit():
                             url, data=json.dumps({"body": body}), headers=headers
                         )
                         status_data["callback"] = json.loads(response.content)
+                    elif hook_name == "push_hooks":
+                        status_data["status"] = "success"
+                        status_data["code"] = "1104"
+                        status_data["doit"] = token + " | " + hook_name
+                        username = request.args.get("username")
+                        repopath = request.args.get("repopath")
+                        reponame = request.args.get("reponame")
+                        url = f"https://api.github.com/repos/{repopath}/{reponame}/dispatches"
+                        data = {"event_type": request.args.get("event_type")}
+                        data_json = json.dumps(data)
+                        headers = {
+                            "Accept": "application/json",
+                            "Authorization": f"token {token}",
+                            "User-Agent": username,
+                            "Content-Type": "application/json",
+                            "Content-Length": str(len(data_json)),
+                        }
+                        response = requests.post(
+                            url, data=data_json, headers=headers
+                        )
+                        status_data["callback"] = {
+                            "url": url,
+                            "data": data,
+                            "headers": headers,
+                            "state": response.status_code,
+                        }
                     else:
                         status_data["code"] = "1008"
                         status_data["doit"] = token + " | " + hook_name
@@ -226,7 +252,6 @@ def doit():
                     status_data["code"] = "1007"
                     status_data["doit"] = token
                     status_data["callback"] = "NO_HOOK"
-
             except binascii.Error:
                 status_data["code"] = "1002"
                 status_data["doit"] = token
