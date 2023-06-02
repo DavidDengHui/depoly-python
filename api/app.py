@@ -306,7 +306,7 @@ def get_api():
         status_data["callback"] = "INVALID_HOOK"
     return jsonify(status_data)
 
-# /send_api?url=https://api.github.com/repos/DavidDengHui/HNest/dispatches&type=POST&header={%22Authorization%22:%22token%20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%22}&data={%22event_type%22:%22sync_gitee%22}
+# /send_api?url=https://api.github.com/repos/DavidDengHui/HNest/dispatches&type=POST&header={%22Authorization%22:%22token%20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%22}&data={}
 
 
 @app.route("/send_api", methods=["GET", "POST"])
@@ -316,102 +316,54 @@ def send_api():
         type = request.args.get("type", "GET").upper()
         header = json.loads(request.args.get("header", "{}"))
         send_data = json.loads(request.args.get("data", "{}"))
-        status_data["doit"] = {
-            "url": url,
-            "type": type,
-            "headers": header,
-            "data": send_data,
-        }
-        if url:
-            if type == "POST":
-                response = requests.post(
-                    url, data=json.dumps(send_data), headers=header)
-            else:
-                response = requests.get(
-                    url, params=send_data, headers=header)
-            get_data = response.content
-            status_data["status"] = "success"
-            status_data["code"] = f"1101-{response.status_code}"
-            status_data["callback"] = get_data.decode()
-            return jsonify(status_data)
-        else:
-            status_data["status"] = "error"
-            status_data["code"] = "1001"
-            status_data["doit"] = "NO_URL"
-            status_data["callback"] = "INVALID_HOOK"
-            return jsonify(status_data)
     elif request.method == "POST":
-        url = request.args.get("url", "")
-        type = request.args.get("type", "")
-        send_data = request.args.get("data", "")
-        header = request.args.get("header", "")
-        if request.method == "POST":
-            data = request.get_json(force=True)
-            if "url" in data:
-                url = data["url"]
-            if "type" in data:
-                type = data["type"]
-            if "data" in data:
-                send_data = data["data"]
-            if "header" in data:
-                header = data["header"]
-        if not type:
-            type = "GET"
-        type = type.upper()
-        if url:
-            try:
-                send_data = json.loads(send_data)
-                if header:
-                    header = json.loads(header)
-                if type == "GET":
-                    response = requests.get(
-                        url, params=send_data, headers=header)
-                elif type == "POST":
-                    response = requests.post(
-                        url, data=send_data, headers=header)
-                else:
-                    status_data["status"] = "error"
-                    status_data["code"] = "1003"
-                    status_data["doit"] = url
-                    status_data["callback"] = f"INVALID_METHOD_{type}"
-                    return jsonify(status_data)
-                if response.ok:
-                    get_data = response.content
-                    status_data["status"] = "success"
-                    status_data["code"] = "1101"
-                    status_data["doit"] = url
-                    status_data["callback"] = json.loads(get_data)
-                    return jsonify(status_data)
-                else:
-                    status_data["status"] = "error"
-                    status_data["code"] = "1004"
-                    status_data["doit"] = url
-                    status_data["callback"] = f"INVALID_URL_{response.status_code}"
-                    return jsonify(status_data)
-            except json.JSONDecodeError:
-                status_data["status"] = "error"
-                status_data["code"] = "1002"
-                status_data["doit"] = url
-                status_data["callback"] = f"INVALID_FORMAT_DATA"
-                return jsonify(status_data)
-        else:
-            status_data["status"] = "error"
-            status_data["code"] = "1001"
-            status_data["doit"] = "NO_URL"
-            status_data["callback"] = "INVALID_HOOK"
-            return jsonify(status_data)
+        url = to_list(request.json)["url"]
+        type = to_list(request.json)["type"]
+        header = json.loads(to_list(request.json)["header"])
+        send_data = json.loads(to_list(request.json)["data"])
     else:
         status_data["status"] = "error"
         status_data["code"] = "1001"
         status_data["doit"] = "send_api"
         status_data["callback"] = f"INVALID_METHOD_{request.method}"
         return jsonify(status_data)
+
+    status_data["doit"] = {
+        "url": url,
+        "type": type,
+        "headers": header,
+        "data": send_data,
+    }
+    if url:
+        if type == "POST":
+            response = requests.post(
+                url, data=json.dumps(send_data), headers=header)
+        else:
+            response = requests.get(
+                url, params=send_data, headers=header)
+        get_data = response.content
+        status_data["status"] = "success"
+        status_data["code"] = f"1101-{response.status_code}"
+        status_data["callback"] = get_data.decode()
+        return jsonify(status_data)
+    else:
+        status_data["status"] = "error"
+        status_data["code"] = "1001"
+        status_data["doit"] = "NO_URL"
+        status_data["callback"] = "INVALID_HOOK"
+        return jsonify(status_data)
+
     return jsonify(status_data)
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.route("/send")
+def send():
+    return render_template("send.html")
 
 
 if __name__ == '__main__':

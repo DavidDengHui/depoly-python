@@ -1,0 +1,166 @@
+<html>
+<head>
+		<title>数据发送器</title>
+		<link rel="shortcut icon" href="https://hnest.eu.org/favicon.ico">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="format-detection" content="telephone=no">  
+    <script>
+        // 定义一个函数，用来向指定元素添加一行输入框
+        function addRow(elementId) {
+            // 获取指定元素
+            var element = document.getElementById(elementId);
+            // 创建一个div元素，用来包裹一行输入框
+            var div = document.createElement("div");
+            // 创建两个input元素，用来输入键和值
+            var input1 = document.createElement("input");
+            var input2 = document.createElement("input");
+            // 创建一个span元素，用来显示冒号
+            var span = document.createElement("span");
+            // 设置span元素的文本为":"
+            span.innerText = ":";
+            // 创建一个button元素，用来删除这一行
+            var button = document.createElement("button");
+            // 设置button元素的文本为"-"
+            button.innerText = "-";
+            // 设置button元素的点击事件为删除这一行
+            button.onclick = function() {
+                // 获取这一行的父元素
+                var parent = this.parentNode;
+                // 从父元素中移除这一行
+                parent.remove();
+            };
+            // 设置input元素的类型为text
+            input1.type = "text";
+            input2.type = "text";
+            input1.placeholder = "键值";
+            input2.placeholder = "键名";
+            // 设置input元素的样式
+            input1.style.width = "100px";
+            input2.style.width = "100px";
+            input1.style.marginRight = "10px";
+            input2.style.marginRight = "10px";
+            span.style.marginRight = "10px";
+            // 将input元素、span元素和button元素添加到div元素中
+            div.appendChild(input1);
+            div.appendChild(span);
+            div.appendChild(input2);
+            div.appendChild(button);
+            // 将div元素添加到指定元素中
+            element.appendChild(div);
+        }
+
+        // 定义一个函数，用来获取指定元素中的所有输入框的值，并组合成json字符串
+        function getJsonString(elementId) {
+            // 获取指定元素
+            var element = document.getElementById(elementId);
+            // 获取指定元素中的所有input元素
+            var inputs = element.getElementsByTagName("input");
+            // 定义一个空对象，用来存储键值对
+            var obj = {};
+            // 遍历所有的input元素，每两个为一组，作为键值对添加到对象中
+            for (var i = 0; i < inputs.length; i += 2) {
+                // 获取键和值
+                var key = inputs[i].value;
+                var value = inputs[i + 1].value;
+                // 如果键和值都不为空，则添加到对象中
+                if (key && value) {
+                    obj[key] = value;
+                }
+            }
+            // 将对象转换为json字符串，并返回
+            return JSON.stringify(obj);
+        }
+
+        // 定义一个函数，用来对url、header和data进行url字符转义，只转义&和"字符，使用replace函数
+        function escapeString(str) {
+          return str.replace(/&/g, "%26").replace(/"/g, "%22").replace(/ /g, "%20");
+        }
+
+        // 定义一个函数，用来生成文本链接，并显示在下方区域中
+        function generateLink() {
+          // 获取url、type、header、data四个参数的值
+          var url = document.getElementById("url").value;
+          var type = document.getElementById("type").value;
+          var header = getJsonString("header");
+          var data = getJsonString("data");
+
+          // 对url、header和data进行url字符转义，使用escapeString函数
+          url = escapeString(url);
+          header = escapeString(header);
+          data = escapeString(data);
+
+          // 拼接文本链接
+          var link =
+              "https://api.hnest.eu.org/send_api?url=" +
+              url +
+              "&type=" +
+              type +
+              "&header=" +
+              header +
+              "&data=" +
+              data;
+
+          // 校验url和type是否为空，如果为空，则在输入框下方显示红色加粗字样"*此项必填"
+          if (!url) {
+              document.getElementById("url-error").style.display =
+                  "inline-block";
+          } else {
+              document.getElementById("url-error").style.display =
+                  "none";
+          }
+          if (!type) {
+              document.getElementById("type-error").style.display =
+                  "inline-block";
+          } else {
+              document.getElementById("type-error").style.display =
+                  "none";
+          }
+
+          // 如果url和type都不为空，则将文本链接显示在下方区域中，否则清空下方区域
+          if (url && type) {
+              document.getElementById("output").value =
+                  link;
+          } else {
+              document.getElementById("output").value =
+                  "";
+          }
+      }
+    </script>
+</head>
+<body>
+    <h1>数据发送器</h1>
+    <p>请输入要请求的<b>链接</b>：</p>
+    <input id="url" type="text" style="width: 300px;" placeholder="https://example.com/?a=1&b=2">
+    <span id="url-error" style="color: red; font-weight: bold; display: none;">*此项必填</span>
+    <p>请输入数据<b>请求方式</b>：</p>
+    <input id="type" type="text" style="width: 300px;" placeholder="GET or POST">
+    <span id="type-error" style="color: red; font-weight: bold; display: none;">*此项必填</span>
+    <p>请输入请求<b>标头</b>信息：</p>
+    <div id="header">
+        <div>
+            <input placeholder="键名" type="text" style="width: 100px; margin-right: 10px;"><span>:</span><input placeholder="键值" type="text" style="width: 100px; margin-right: 10px; margin-left: 10px;">
+        </div>
+    </div>
+    <button onclick="addRow('header')">+</button>
+		<span>（点击+号可以增加行数）</span>
+    <p>请输入请求发送<b>数据</b>：</p>
+    <div id="data">
+        <div>
+            <input placeholder="键名" type="text" style="width: 100px; margin-right: 10px;"><span>:</span><input placeholder="键值" type="text" style="width: 100px; margin-right: 10px; margin-left: 10px;">
+        </div>
+    </div>
+    <button onclick="addRow('data')">+</button>
+		<span>（点击+号可以增加行数）</span>
+    <p><button onclick="generateLink()">生成</button></p>
+    <p>生成的文本链接如下：</p>
+    <!-- 修改下方区域为textarea -->
+    <textarea id="output" rows="5" cols="50"></textarea>
+		<br><br><br>
+		<button onclick="window.location.href='/'">←返回主页</button>
+</body>
+</html>
