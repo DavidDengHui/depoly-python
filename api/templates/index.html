@@ -11,37 +11,27 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="format-detection" content="telephone=no">  
   <script>
-    // 定义base64字符集
     var base64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    // 定义base64编码函数
     function base64encode(str) {
-      // 将字符串转换为字节数组
       var bytes = [];
       for (var i = 0; i < str.length; i++) {
         bytes.push(str.charCodeAt(i));
       }
-      // 初始化结果字符串
       var result = "";
-      // 遍历字节数组，每三个字节为一组，进行编码
       for (var i = 0; i < bytes.length; i += 3) {
-        // 获取当前组的三个字节
         var b1 = bytes[i];
         var b2 = bytes[i + 1] || 0;
         var b3 = bytes[i + 2] || 0;
-        // 将三个字节拼接为一个24位的二进制数
         var bin = (b1 << 16) | (b2 << 8) | b3;
-        // 将24位的二进制数分割为四个6位的二进制数
         var c1 = (bin >> 18) & 63;
         var c2 = (bin >> 12) & 63;
         var c3 = (bin >> 6) & 63;
         var c4 = bin & 63;
-        // 根据base64字符集，将四个6位的二进制数转换为四个字符
         var r1 = base64chars.charAt(c1);
         var r2 = base64chars.charAt(c2);
         var r3 = base64chars.charAt(c3);
         var r4 = base64chars.charAt(c4);
-        // 如果原字符串长度不是3的倍数，需要在结果字符串末尾添加等号
         if (i + 1 >= bytes.length) {
           r3 = "=";
           r4 = "=";
@@ -49,47 +39,30 @@
         if (i + 2 >= bytes.length) {
           r4 = "=";
         }
-        // 将四个字符拼接到结果字符串中
         result += r1 + r2 + r3 + r4;
       }
-      // 返回结果字符串
       return result;
     }
 
-    //定义一个函数，用于解码base64字符串
     function base64decode(str) {
-      //使用atob()方法将base64字符串转换为二进制数据
       var data = atob(str);
-      //创建一个空字符串，用于存储解码后的结果
       var result = "";
-      //遍历二进制数据的每个字节
       for (var i = 0; i < data.length; i++) {
-        //获取当前字节的ASCII码值
         var code = data.charCodeAt(i);
-        //将ASCII码值转换为对应的字符，并拼接到结果字符串中
         result += String.fromCharCode(code);
       }
-      //返回结果字符串
       return result;
     }
 
-    // 定义编码按钮点击事件处理函数
     function encode() {
-      // 获取输入框中的内容
       var input = document.getElementById("input").value;
-      // 调用base64编码函数，得到编码后的内容
       var output = base64encode(input);
-      // 将编码后的内容显示在输出框中
       document.getElementById("output").value = output;
     }
 
-    // 定义解码按钮点击事件处理函数
     function decode() {
-      // 获取输入框中的内容
       var input = document.getElementById("input").value;
-      // 调用base64解码函数，得到解码后的内容
       var output = base64decode(input);
-      // 将解码后的内容显示在输出框中
       document.getElementById("output").value = output;
     }
 
@@ -105,27 +78,17 @@
     }
   </script>
   <script>
-    //定义一个函数，用于将链接中的&符号进行url转义
     function escapeUrl(url) {
-      //使用replace方法将&符号替换为%26
       return url.replace(/&/g, "%26");
     }
 
-    //定义一个函数，用于生成新的链接并显示在页面上
     function generateLink() {
-      //获取输入框中的链接
       var inputURL = document.getElementById("inputURL").value;
-      //调用escapeUrl函数将链接进行url转义
       var escaped = escapeUrl(inputURL);
-      //拼接新的链接
-      var newLink = "https://api.hnest.eu.org/api?url=" + escaped;
-      //获取显示框元素
+      var newLink = "https://api.hnest.eu.org/get_api?url=" + escaped;
       var outputURL = document.getElementById("outputURL");
-      //设置显示框的内容为新的链接，并添加一个a标签，使其可以点击打开新窗口
-      outputURL.innerHTML = "<a href='/api?url=" + escaped + "' target='_blank'>" + newLink + "</a>";
-      //获取复制按钮元素
+      outputURL.innerHTML = "<a href='/get_api?url=" + escaped + "' target='_blank'>" + newLink + "</a>";
       var resetLinkButton = document.getElementById("resetLinkButton");
-      //设置复制按钮的属性为可见
       resetLinkButton.style.visibility = "visible";
     }
 
