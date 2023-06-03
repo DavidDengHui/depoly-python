@@ -52,7 +52,7 @@ function resetLink() {
   </head>
   <body>
     <h1>盗链生成器</h1>
-    <p>请输入一个API<b>链接</b>：</p>
+    <p>请输入要请求的<b> API 链接</b>：</p>
     <input type="text" id="inputURL" placeholder="https://example.com/?a=1&b=2">
     <button onclick="generateLink()">盗链</button>
     <button id="resetLinkButton" onclick="resetLink()" style="visibility: hidden;">重置</button>
@@ -63,7 +63,7 @@ function resetLink() {
       <button id="copyButton" onclick="document.getElementById('selectButton').click();document.execCommand('copy');alert('链接已复制：\n'+document.getElementById('outputURL').value);" style="visibility: hidden;">复制</button>
       <button id="hrefButton" onclick="window.open(document.getElementById('outputURL').value);" style="visibility: hidden;">访问</button>
     </p>
-    <textarea id="outputURL" rows="5" cols="50"></textarea>
+    <textarea placeholder="https://api.hnest.eu.org/get_api?url=" id="outputURL" rows="5" cols="50"></textarea>
     <br>
     <br>
     <br>

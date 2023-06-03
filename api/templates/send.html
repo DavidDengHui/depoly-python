@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>数据发送器</title>
@@ -162,7 +163,7 @@ function resetCon() {
       <button id="copyButton" onclick="document.getElementById('selectButton').click();document.execCommand('copy');alert('链接已复制：\n'+document.getElementById('outputSend').value);" style="visibility: hidden;">复制</button>
       <button id="hrefButton" onclick="window.open(document.getElementById('outputSend').value);" style="visibility: hidden;">访问</button>
     </p>
-    <textarea id="outputSend" rows="5" cols="50"></textarea>
+    <textarea placeholder="https://api.hnest.eu.org/send_api?url=&type=&header=&data=" id="outputSend" rows="5" cols="50"></textarea>
     <br>
     <br>
     <br>
