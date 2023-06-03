@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect
 from flask_cors import CORS
 import base64
 import binascii
@@ -358,12 +358,22 @@ def send_api():
 
 @app.route("/")
 def index():
+    return redirect("/readme")
+
+
+@app.route("/readme")
+def readme_page():
     return render_template("index.html")
 
 
 @app.route("/send")
-def send():
+def send_page():
     return render_template("send.html")
+
+
+@app.route("/get")
+def get_page():
+    return render_template("get.html")
 
 
 if __name__ == '__main__':

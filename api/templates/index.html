@@ -11,93 +11,96 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="format-detection" content="telephone=no">  
   <script>
-    var base64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    function base64encode(str) {
-      var bytes = [];
-      for (var i = 0; i < str.length; i++) {
-        bytes.push(str.charCodeAt(i));
-      }
-      var result = "";
-      for (var i = 0; i < bytes.length; i += 3) {
-        var b1 = bytes[i];
-        var b2 = bytes[i + 1] || 0;
-        var b3 = bytes[i + 2] || 0;
-        var bin = (b1 << 16) | (b2 << 8) | b3;
-        var c1 = (bin >> 18) & 63;
-        var c2 = (bin >> 12) & 63;
-        var c3 = (bin >> 6) & 63;
-        var c4 = bin & 63;
-        var r1 = base64chars.charAt(c1);
-        var r2 = base64chars.charAt(c2);
-        var r3 = base64chars.charAt(c3);
-        var r4 = base64chars.charAt(c4);
-        if (i + 1 >= bytes.length) {
-          r3 = "=";
-          r4 = "=";
-        }
-        if (i + 2 >= bytes.length) {
-          r4 = "=";
-        }
-        result += r1 + r2 + r3 + r4;
-      }
-      return result;
-    }
+var base64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    function base64decode(str) {
-      var data = atob(str);
-      var result = "";
-      for (var i = 0; i < data.length; i++) {
-        var code = data.charCodeAt(i);
-        result += String.fromCharCode(code);
-      }
-      return result;
+function base64encode(str) {
+  var bytes = [];
+  for (var i = 0; i < str.length; i++) {
+    bytes.push(str.charCodeAt(i));
+  }
+  var result = "";
+  for (var i = 0; i < bytes.length; i += 3) {
+    var b1 = bytes[i];
+    var b2 = bytes[i + 1] || 0;
+    var b3 = bytes[i + 2] || 0;
+    var bin = (b1 << 16) | (b2 << 8) | b3;
+    var c1 = (bin >> 18) & 63;
+    var c2 = (bin >> 12) & 63;
+    var c3 = (bin >> 6) & 63;
+    var c4 = bin & 63;
+    var r1 = base64chars.charAt(c1);
+    var r2 = base64chars.charAt(c2);
+    var r3 = base64chars.charAt(c3);
+    var r4 = base64chars.charAt(c4);
+    if (i + 1 >= bytes.length) {
+      r3 = "=";
+      r4 = "=";
     }
+    if (i + 2 >= bytes.length) {
+      r4 = "=";
+    }
+    result += r1 + r2 + r3 + r4;
+  }
+  return result;
+}
 
-    function encode() {
-      var input = document.getElementById("input").value;
-      var output = base64encode(input);
-      document.getElementById("output").value = output;
-    }
+function base64decode(str) {
+  var data = atob(str);
+  var result = "";
+  for (var i = 0; i < data.length; i++) {
+    var code = data.charCodeAt(i);
+    result += String.fromCharCode(code);
+  }
+  return result;
+}
 
-    function decode() {
-      var input = document.getElementById("input").value;
-      var output = base64decode(input);
-      document.getElementById("output").value = output;
-    }
+function encode() {
+  var input = document.getElementById("input").value;
+  var output = base64encode(input);
+  document.getElementById("output").value = output;
+}
 
-    function jiaohuan() {
-      var k = document.getElementById("input").value;
-      document.getElementById("input").value = document.getElementById("output").value;
-      document.getElementById("output").value = k;
-    }
+function decode() {
+  var input = document.getElementById("input").value;
+  var output = base64decode(input);
+  document.getElementById("output").value = output;
+}
 
-    function chongzhi() {
-      document.getElementById("input").value = "";
-      document.getElementById("output").value = "";
-    }
+function jiaohuan() {
+  var k = document.getElementById("input").value;
+  document.getElementById("input").value = document.getElementById("output").value;
+  document.getElementById("output").value = k;
+}
+
+function chongzhi() {
+  document.getElementById("input").value = "";
+  document.getElementById("output").value = "";
+}
+
   </script>
   <script>
-    function escapeUrl(url) {
-      return url.replace(/&/g, "%26");
-    }
 
-    function generateLink() {
-      var inputURL = document.getElementById("inputURL").value;
-      var escaped = escapeUrl(inputURL);
-      var newLink = "https://api.hnest.eu.org/get_api?url=" + escaped;
-      var outputURL = document.getElementById("outputURL");
-      outputURL.innerHTML = "<a href='/get_api?url=" + escaped + "' target='_blank'>" + newLink + "</a>";
-      var resetLinkButton = document.getElementById("resetLinkButton");
-      resetLinkButton.style.visibility = "visible";
-    }
+function escapeUrl(url) {
+  return url.replace(/&/g, "%26");
+}
 
+function generateLink() {
+  var inputURL = document.getElementById("inputURL").value;
+  var escaped = escapeUrl(inputURL);
+  var newLink = "https://api.hnest.eu.org/get_api?url=" + escaped;
+  var outputURL = document.getElementById("outputURL");
+  outputURL.innerHTML = "<a href='/get_api?url=" + escaped + "' target='_blank'>" + newLink + "</a>";
+  var resetLinkButton = document.getElementById("resetLinkButton");
+  resetLinkButton.style.visibility = "visible";
+}
 
-    function resetLink() {
-      document.getElementById("inputURL").value = "";
-      document.getElementById("outputURL").innerHTML = "";
-      resetLinkButton.style.visibility = "hidden";
-    }
+function resetLink() {
+  document.getElementById("inputURL").value = "";
+  document.getElementById("outputURL").innerHTML = "";
+  resetLinkButton.style.visibility = "hidden";
+}
+
   </script>
 </head>
 <body>
@@ -106,25 +109,19 @@
     <a href='/doit?token=Z2hwX05VejBmZzBFSjFuVXBmSUtLU1lDZjJpN3RpdVlnZzB5VjdtRA==' title='Myself API'>https://api.hnest.eu.org/doit</a>
   </h2>
   <br>
-  <h1>盗链生成器</h1>
-  <p>请输入一个链接：</p>
-  <input type="text" id="inputURL" placeholder="https://example.com/?a=1&b=2">
-  <button onclick="generateLink()">盗链</button>
-  <button id="resetLinkButton" onclick="resetLink()" style="visibility: hidden;">重置</button>
-  <p>生成的链接：</p>
-  <div id="outputURL"></div>
+  <h1><a href="/get" title="盗链生成器 WebAPI">盗链生成器</a></h1>
   <br>
   <h1><a href="/send" title="数据发送器 WebHook">数据发送器</a></h1>
   <br>
   <h1>Base64编码和解码</h1>
   <p>请输入要编码或解码的内容：</p>
-  <textarea id="input" rows="10" cols="80"></textarea>
+  <textarea id="input" rows="5" cols="50"></textarea>
   <p>点击下面的按钮进行编码或解码：</p>
   <button onclick="encode()">编码</button>
     <button onclick="jiaohuan()">交🔄换</button> 
    <button onclick="chongzhi()">重🗑️置</button>  
   <button onclick="decode()">解码</button>
   <p>输出结果如下：</p>
-  <textarea id="output" rows="10" cols="80" readonly></textarea>
+  <textarea id="output" rows="5" cols="50" readonly></textarea>
 </body>
 </html>

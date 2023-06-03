@@ -7,8 +7,8 @@
   ],
 	"redirects": [
 		{ 
-			"source": "/index", 
-			"destination": "/" 
+			"source": "/", 
+			"destination": "/home" 
 		}
 	]
 }
