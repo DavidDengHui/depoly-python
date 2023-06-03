@@ -8,7 +8,7 @@
 	"redirects": [
 		{ 
 			"source": "/", 
-			"destination": "/home" 
+			"destination": "/readme" 
 		}
 	]
 }
