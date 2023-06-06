@@ -25,14 +25,13 @@ def to_list(cont):
 
 @app.route("/doit", methods=["GET", "POST"])
 def doit():
-    token = request.args.get("token")
-    hook_name = request.args.get("hook_name")
+    token = request.args.get(
+        "token", "Z2hwX05VejBmZzBFSjFuVXBmSUtLU1lDZjJpN3RpdVlnZzB5VjdtRA==")
+    hook_name = request.args.get("hook_name", None)
     if request.method == "POST":
         temp = to_list(request.json)
-        if temp["password"]:
-            token = temp["password"]
-        if temp["hook_name"]:
-            hook_name = temp["hook_name"]
+        token = temp.get('password', token)
+        hook_name = temp.get('hook_name', hook_name)
     if request.headers.get("HTTP_X_GITHUB_EVENT"):
         hook_name = request.headers.get("HTTP_X_GITHUB_EVENT")
     if token:
