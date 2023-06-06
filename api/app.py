@@ -30,7 +30,7 @@ def doit():
         token = page_url = to_list(request.json)["password"]
     hook_name = request.args.get("hook_name")
     if request.method == "POST":
-        hook_name = page_url = to_list(request.json)["hook_name"]
+        hook_name = to_list(request.json)["hook_name"]
     if request.headers.get("HTTP_X_GITHUB_EVENT"):
         hook_name = request.headers.get("HTTP_X_GITHUB_EVENT")
     if token:
