@@ -4,11 +4,5 @@
 			"source": "/(.*)", 
 			"destination": "/api/app" 
 		}
-  ],
-	"redirects": [
-		{ 
-			"source": "/", 
-			"destination": "/readme" 
-		}
-	]
+  ]
 }
