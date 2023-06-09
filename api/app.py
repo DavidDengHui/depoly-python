@@ -359,7 +359,12 @@ def send_api():
 
 @app.route("/")
 def index():
-    return redirect("/readme")
+    if request.host == "mail.hnest.eu.org":
+        return redirect("https://qiye.aliyun.com/alimail/")
+    if request.host == "i.hnest.eu.org":
+        return redirect("https://www.office.com/?auth=2")
+    else:
+        return redirect("/readme")
 
 
 @app.route("/readme")
