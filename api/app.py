@@ -363,18 +363,21 @@ def send_api():
 def get_img():
     url = request.args.get("url")
     type = request.args.get("type")
+    filename = "get_img"
     if request.method == "POST":
         if to_list(request.json)["url"]:
             url = to_list(request.json)["url"]
             type = to_list(request.json)["type"]
     if url:
+        filename = url.split("/")[-1]
         if type is None:
             type = "jpg"
             if "." in url.split("/")[-1]:
                 type = re.search(
                     "\.[a-zA-Z]+", url.split("/")[-1]).group(0)[1:]
+                filename = filename.split(".")[0]
         response = requests.get(url)
-        return send_file(io.BytesIO(response.content), mimetype=f"image/{type}")
+        return send_file(io.BytesIO(response.content), mimetype=f"image/{type}", as_attachment=False, download_name=f"{filename}.{type}")
     else:
         status_data["status"] = "error"
         status_data["code"] = "1001"
