@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, request, render_template, redirect
+from flask import Flask, jsonify, request, render_template, redirect, send_file
 from flask_cors import CORS
 import base64
 import binascii
 import json
 import requests
+import io
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -357,6 +359,30 @@ def send_api():
     return jsonify(status_data)
 
 
+@app.route("/get_img")
+def get_img():
+    url = request.args.get("url")
+    type = request.args.get("type")
+    if request.method == "POST":
+        if to_list(request.json)["url"]:
+            url = to_list(request.json)["url"]
+            type = to_list(request.json)["type"]
+    if url:
+        if type is None:
+            type = "jpg"
+            if "." in url.split("/")[-1]:
+                type = re.search(
+                    "\.[a-zA-Z]+", url.split("/")[-1]).group(0)[1:]
+        response = requests.get(url)
+        return send_file(io.BytesIO(response.content), mimetype=f"image/{type}")
+    else:
+        status_data["status"] = "error"
+        status_data["code"] = "1001"
+        status_data["doit"] = "NO_URL"
+        status_data["callback"] = "INVALID_HOOK"
+    return jsonify(status_data)
+
+
 @app.route("/")
 def index():
     if request.host == "mail.hnest.eu.org":
@@ -365,6 +391,13 @@ def index():
         return redirect("https://www.office.com/?auth=2")
     else:
         return redirect("/readme")
+
+
+@app.route("/favicon.ico")
+def favicon():
+    response = requests.get(
+        "https://hnest.eu.org/favicon.ico")
+    return send_file(io.BytesIO(response.content), mimetype="image/png")
 
 
 @app.route("/readme")
