@@ -309,7 +309,7 @@ def get_api():
         status_data["callback"] = "INVALID_HOOK"
     return jsonify(status_data)
 
-# /send_api?url=https://api.github.com/repos/DavidDengHui/HNest/dispatches&type=POST&header={%22Authorization%22:%22token%20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%22}&data={}
+# /send_api?url=https%3A%2F%2Fapi.github.com%2Frepos%2FDavidDengHui%2FHNest%2Fdispatches&type=POST&header=%7B"Authorization"%3A"token%20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"%7D&data=%7B"event_type"%3A"github"%7D
 
 
 @app.route("/send_api", methods=["GET", "POST"])
