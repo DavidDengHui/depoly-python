@@ -393,7 +393,7 @@ def index():
     if request.host == "i.hnest.eu.org":
         return redirect("https://www.office.com/?auth=2")
     else:
-        return redirect("/readme")
+        return render_template("index.html")
 
 
 @app.route("/favicon.ico")
@@ -405,6 +405,11 @@ def favicon():
 
 @app.route("/readme")
 def readme_page():
+    return render_template("index.html")
+
+
+@app.route("/index")
+def index_page():
     return render_template("index.html")
 
 
